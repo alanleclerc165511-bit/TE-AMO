@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestro Juego ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: black;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Fondo */
+.background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #1a0000, #000);
+  z-index: -1;
+}
+
+/* Luces */
+.light {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ff0040;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #ff0040;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
+}
+
+/* Pantallas */
+.screen {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: 0.5s;
+  display: none;
+}
+
+.screen.active {
+  display: block;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.container {
+  margin-top: 15vh;
+  padding: 20px;
+}
+
+/* Botones */
+button {
+  padding: 14px 22px;
+  margin: 10px;
+  font-size: 16px;
+  background: linear-gradient(45deg, #ff0055, #ff3385);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* Pikachu */
+.pikachu {
+  font-size: 70px;
+  animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+  50% { transform: translateY(-12px); }
+}
+
+/* Letras */
+.letra {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #ffd1dc;
+  min-height: 40px;
+  animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+  <!-- Nivel 1 -->
+  <div id="pantalla1" class="screen active">
+    <h1>🎮 Nivel 1</h1>
+    <p>Hola mi niño… ¿estás listo para algo especial? ❤️</p>
+    <button onclick="next(2)">Sí, quiero 💕</button>
+    <br>
+    <button onclick="playMusic()">🎵 Empezar música</button>
+    <div id="letra" class="letra"></div>
+  </div>
+
+  <!-- Nivel 2 -->
+  <div id="pantalla2" class="screen">
+    <h1>🎮 Nivel 2</h1>
+    <p>Elige con cuidado 👀</p>
+    <button onclick="mensaje('Eres mi paz, mi lugar seguro 🥺')">Abrir cofre 💌</button>
+    <button onclick="mensaje('Eres mi cielo, mi mar y mi tierra ❤️')">Caminar juntos 🚶‍♂️</button>
+  </div>
+
+  <!-- Nivel 3 -->
+  <div id="pantalla3" class="screen">
+    <h1>🎮 Nivel 3</h1>
+    <p>Ya casi llegas… 💓</p>
+    <button onclick="next(4)">Continuar ⚡</button>
+  </div>
+
+  <!-- Final -->
+  <div id="pantalla4" class="screen">
+    <h1>🎂 FINAL ❤️</h1>
+    <div class="pikachu">⚡🐭</div>
+    <p>
+      Llegaste hasta aquí… 🥺<br><br>
+      Esto nunca fue solo un juego…<br><br>
+      Eres mi niño, mi solecito ☀️<br>
+      Mi cielo, mi mar y mi tierra 🌊🌎<br><br>
+      Te amo muchísimo ❤️<br><br>
+      Feliz cumpleaños 🎂💕
+    </p>
+  </div>
+
+</div>
+
+<audio id="music">
+  <source src="count-on-me.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Cambiar pantallas
+function next(num) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById("pantalla" + num).classList.add("active");
+}
+
+// Mensaje
+function mensaje(texto) {
+  alert(texto);
+  next(3);
+}
+
+// Letras sincronizadas
+const lyrics = [
+  { time: 2, text: "If you ever find yourself stuck in the middle of the sea..." },
+  { time: 7, text: "I'll sail the world to find you 💕" },
+  { time: 12, text: "If you ever find yourself lost in the dark..." },
+  { time: 17, text: "I’ll be the light to guide you ✨" },
+  { time: 23, text: "Find out what we’re made of..." },
+  { time: 28, text: "When we are called to help our friends in need 🥺" },
+  { time: 35, text: "You can count on me like 1, 2, 3..." },
+  { time: 40, text: "I’ll be there ❤️" },
+  { time: 45, text: "And I know when I need it..." },
+  { time: 50, text: "I can count on you like 4, 3, 2 💞" }
+];
+
+function playMusic() {
+  let music = document.getElementById("music");
+  let letraDiv = document.getElementById("letra");
+
+  music.currentTime = 0;
+  music.play();
+
+  let index = 0;
+
+  music.ontimeupdate = () => {
+    if (index < lyrics.length && music.currentTime >= lyrics[index].time) {
+      letraDiv.innerHTML = lyrics[index].text;
+      index++;
+    }
+  };
+}
+
+// Luces
+for (let i = 0; i < 50; i++) {
+  let light = document.createElement("div");
+  light.className = "light";
+  light.style.left = Math.random() * 100 + "vw";
+  light.style.animationDuration = (Math.random() * 5 + 3) + "s";
+  document.body.appendChild(light);
+}
+</script>
+
+</body>
+</html>
